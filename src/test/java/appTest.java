@@ -25,6 +25,7 @@ public class appTest {
     private static final String INPUT_PNR = "//input[@id='pnr']" ;
     private static final String BUTTON_CHECK_STATUS = "//a[text()='CHECK STATUS']" ;
     private static final String CHECK_PNR_TEXT= "//p[contains(@class, 'appendBottom')]" ;
+    private static final String REFRESH_PAGE_BUTTON= "//a[text()='REFRESH PAGE']" ;
 
     private static final String PNR_TEXT = "0123456789" ;
 
@@ -47,7 +48,7 @@ public class appTest {
         driver.manage().timeouts().pageLoadTimeout(20, SECONDS);
         driver.get("https://www.makemytrip.com/");
         driver.manage().window().maximize();
-        wait = new WebDriverWait(driver, 5);
+        wait = new WebDriverWait(driver, 15);
     }
 
     @Test
@@ -56,11 +57,11 @@ public class appTest {
         driver.findElement(By.xpath(LINK_TRAIN)).click();
         driver.findElement(By.xpath(CHECK_PMR_STATUS_CHECKBOX)).click();
         driver.findElement(By.xpath(INPUT_PNR)).sendKeys(PNR_TEXT);
-        Thread.sleep(5000);
+        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath(BUTTON_CHECK_STATUS))));
         driver.findElement(By.xpath(BUTTON_CHECK_STATUS)).click();
 
         //Check
-        Thread.sleep(10000);
+        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath(REFRESH_PAGE_BUTTON))));;
         String actualnumber  = driver.findElements(By.xpath(CHECK_PNR_TEXT)).get(0).getText().replace("PNR ","");
         Assert.assertEquals(actualnumber, PNR_TEXT);
     }
