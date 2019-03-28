@@ -5,6 +5,7 @@ import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -28,7 +29,7 @@ public class appTest {
     private static final String PNR_TEXT = "0123456789" ;
 
     private static ChromeDriverService service;
-
+    public static WebDriverWait wait;
     @BeforeTest
     public static void before(){
         service = new ChromeDriverService.Builder()
@@ -46,6 +47,7 @@ public class appTest {
         driver.manage().timeouts().pageLoadTimeout(20, SECONDS);
         driver.get("https://www.makemytrip.com/");
         driver.manage().window().maximize();
+        wait = new WebDriverWait(driver, 5);
     }
 
     @Test
@@ -54,10 +56,11 @@ public class appTest {
         driver.findElement(By.xpath(LINK_TRAIN)).click();
         driver.findElement(By.xpath(CHECK_PMR_STATUS_CHECKBOX)).click();
         driver.findElement(By.xpath(INPUT_PNR)).sendKeys(PNR_TEXT);
-        driver.wait(500);
+        Thread.sleep(5000);
         driver.findElement(By.xpath(BUTTON_CHECK_STATUS)).click();
 
         //Check
+        Thread.sleep(10000);
         String actualnumber  = driver.findElements(By.xpath(CHECK_PNR_TEXT)).get(0).getText().replace("PNR ","");
         Assert.assertEquals(actualnumber, PNR_TEXT);
     }
